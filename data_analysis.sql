@@ -26,6 +26,9 @@ CREATE TABLE la_crime (
     LON FLOAT
 );
 
+-- query for dropping table
+drop table la_crime
+
 -- copy data to table
 SET datestyle = 'SQL, MDY';
 COPY la_crime FROM 'D:\Projects\LACrimeDataAnalysis\data\cleaned_crime_data.csv' WITH (FORMAT csv, HEADER);
@@ -46,4 +49,51 @@ WITH crime_counts AS (
 SELECT area_name, crm_cd_desc as most_common_crime, count_per_area_per_crime 
 from crime_counts
 where rn=1
+
+
+-- 2. How does the time of occurrence ('TIME OCC') relate to the type of crime ('Crm Cd Desc')? Are certain crimes more likely at certain times of day?
+SELECT 
+crm_cd_desc,
+CASE
+	WHEN EXTRACT(HOUR FROM time_occ) BETWEEN 0 AND 5 THEN 'Night'
+	WHEN EXTRACT(HOUR FROM time_occ) BETWEEN 6 AND 11 THEN 'Morning'
+	WHEN EXTRACT(HOUR FROM time_occ) BETWEEN 12 AND 17 THEN 'Afternoon'
+	ELSE 'Evening'
+END as time_period,
+count(*) as crime_count
+from la_crime
+group by crm_cd_desc, time_period
+order by crm_cd_desc, crime_count desc;
+
+-- 3. What is the average age ('Vict Age') of victims for each type of crime ('Crm Cd Desc')?
+SELECT 
+crm_cd_desc as Crime , 
+ROUND(AVG(vict_age)) AS "Average Age"
+from la_crime
+WHERE vict_age != 0
+group by crm_cd_desc
+ 
+-- 4. Are men, women, or non-binary individuals ('Vict Sex') more likely to be victims of certain types of crimes ('Crm Cd Desc')?
+SELECT 
+crm_cd_desc,
+vict_sex,
+count(*) as victim_count
+from la_crime
+group by crm_cd_desc, vict_sex
+order by crm_cd_desc asc, victim_count desc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
