@@ -12,8 +12,8 @@ CREATE TABLE la_crime (
     Crm_Cd_Desc VARCHAR(255),
     Mocodes VARCHAR(255),
     Vict_Age INT,
-    Vict_Sex CHAR(1),
-    Vict_Descent CHAR(1),
+    Vict_Sex VARCHAR(20),
+    Vict_Descent VARCHAR(20),
     Premis_Cd INT,
     Premis_Desc VARCHAR(255),
     Weapon_Used_Cd INT,
@@ -21,14 +21,29 @@ CREATE TABLE la_crime (
     Status CHAR(2),
     Status_Desc VARCHAR(255),
     Crm_Cd_1 INT,
-    Crm_Cd_2 INT,
-    Crm_Cd_3 INT,
-    Crm_Cd_4 INT,
     LOCATION VARCHAR(255),
-    Cross_Street VARCHAR(255),
     LAT FLOAT,
     LON FLOAT
 );
 
 -- copy data to table
-COPY la_crime FROM '/path/to/csv/ZIP_CODES.txt' WITH (FORMAT csv);
+SET datestyle = 'SQL, MDY';
+COPY la_crime FROM 'D:\Projects\LACrimeDataAnalysis\data\cleaned_crime_data.csv' WITH (FORMAT csv, HEADER);
+
+-- show all the data
+select * from la_crime
+
+-- 1. What is the most common type of crime (based on 'Crm Cd Desc') in each area (based on 'AREA NAME')?
+
+WITH crime_counts AS (
+	select area_name, crm_cd_desc, 
+	count(*) as count_per_area_per_crime,
+	ROW_NUMBER() OVER (PARTITION BY area_name ORDER BY COUNT(*) DESC) as rn
+	from la_crime 
+	group by area_name,crm_cd_desc 
+)
+
+SELECT area_name, crm_cd_desc as most_common_crime, count_per_area_per_crime 
+from crime_counts
+where rn=1
+
