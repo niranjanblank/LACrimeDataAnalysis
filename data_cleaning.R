@@ -29,3 +29,5 @@ cleaned_crime_data <- cleaned_crime_data %>%
 # Drop rows where 'Premis Cd', 'Status Desc', or 'Crm Cd 1' are NA
 cleaned_crime_data <- cleaned_crime_data %>%
   drop_na(`Premis Cd`, `Status Desc`, `Crm Cd 1`)
+
+write_csv(cleaned_crime_data, 'data/cleaned_crime_data.csv')
