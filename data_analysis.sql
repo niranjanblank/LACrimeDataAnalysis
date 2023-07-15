@@ -158,6 +158,37 @@ FROM
   crime_over_time
 ORDER BY
   count_change DESC;
+  
+-- 10. Are certain types of crime more prevalent in certain areas?
+with total_crimes_by_area as (
+Select
+	area_name,
+	count(*) as total_crime_count
+	from la_crime
+	group by area_name
+),
+crime_counts_by_area as (
+	SELECT 
+	area_name,
+	crm_cd_desc,
+	count(*) as crime_count,
+	ROW_NUMBER() OVER (PARTITION BY area_name ORDER BY COUNT(*) desc) as rn
+	from la_crime
+	group by area_name, crm_cd_desc
+)
+
+select 
+	cc.area_name, 
+	cc.crm_cd_desc,
+	cc.crime_count,
+	cc.crime_count * 100.0 / tc.total_crime_count as crime_proportion
+from crime_counts_by_area as cc
+JOIN
+	total_crimes_by_area as tc ON cc.area_name = tc.area_name
+where rn <=5
+ORDER BY 
+    cc.area_name, 
+    cc.crime_count DESC;
 
 
 
