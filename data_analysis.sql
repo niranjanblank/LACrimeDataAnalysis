@@ -189,6 +189,76 @@ where rn <=5
 ORDER BY 
     cc.area_name, 
     cc.crime_count DESC;
+	
+-- 11. Are certain crimes more likely to happen at certain times of the year?
+SELECT
+ crm_cd_desc,
+ EXTRACT (MONTH from date_occ) as month_of_occurence,
+ count(*) as crime_count
+FROM la_crime
+group by crm_cd_desc, month_of_occurence
+order by crm_cd_desc, crime_count
+
+
+-- 12. Which area has the most crimes?
+SELECT
+	area_name,
+	count(*) as crime_count
+FROM la_crime
+group by area_name
+order by crime_count desc
+limit 1
+
+-- 13. Which area has the least crimes?
+SELECT
+	area_name,
+	count(*) as crime_count
+FROM la_crime
+group by area_name
+order by crime_count asc
+limit 1
+
+
+-- 14. What is the distribution of victim's age for unsolved crimes?
+SELECT
+	CASE
+		WHEN age_bucket=1 THEN '0-10'
+		WHEN age_bucket=2 THEN '11-20'
+		WHEN age_bucket=3 THEN '21-30'
+	    WHEN age_bucket = 4 THEN '31-40'
+        WHEN age_bucket = 5 THEN '41-50'
+        WHEN age_bucket = 6 THEN '51-60'
+        WHEN age_bucket = 7 THEN '61-70'
+        ELSE '71+'
+	END as age_range,
+	count(*) as total_victims
+FROM
+	(select
+		width_bucket(vict_age ,0,100,7) as age_bucket
+	from la_crime
+	where
+		status='IC' and vict_age >0) sub
+group by age_range
+
+-- 15. How does the crime rate compare between different sexes and descents?
+SELECT 
+    vict_sex,
+    count(*) as total_crimes,
+    ROUND((count(*)::NUMERIC / (SELECT COUNT(*) FROM la_crime)::NUMERIC) * 100.0, 2) as crime_rate
+FROM la_crime
+GROUP BY vict_sex
+ORDER BY crime_rate desc
+
+SELECT 
+    vict_descent,
+    count(*) as total_crimes,
+    ROUND((count(*)::NUMERIC / (SELECT COUNT(*) FROM la_crime)::NUMERIC) * 100.0, 2) as crime_rate
+FROM la_crime
+GROUP BY vict_descent
+ORDER BY crime_rate desc
+
+
+
 
 
 
