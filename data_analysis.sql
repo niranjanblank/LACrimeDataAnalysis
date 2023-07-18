@@ -112,12 +112,12 @@ order by weapon_used_count desc
 
 
 -- 8. What are the most common locations for crimes to occur (based on 'LOCATION')?
--- SELECT
--- area_name,
--- count(*) as crime_count
--- from la_crime
--- group by area_name
--- order by crime_count desc
+SELECT
+area_name,
+count(*) as crime_count
+from la_crime
+group by area_name
+order by crime_count desc
 
 -- -- 9. Are there certain crimes that are increasing or decreasing over time more than others?
 -- with crime_over_time as (
@@ -156,8 +156,7 @@ SELECT
   crime_count - previous_count AS count_change
 FROM
   crime_over_time
-ORDER BY
-  count_change DESC;
+
   
 -- 10. Are certain types of crime more prevalent in certain areas?
 with total_crimes_by_area as (
