@@ -240,6 +240,7 @@ FROM
 group by age_range
 
 -- 15. How does the crime rate compare between different sexes and descents?
+-- query for different sexes
 SELECT 
     vict_sex,
     count(*) as total_crimes,
@@ -248,6 +249,7 @@ FROM la_crime
 GROUP BY vict_sex
 ORDER BY crime_rate desc
 
+-- query for descents
 SELECT 
     vict_descent,
     count(*) as total_crimes,
