@@ -194,16 +194,114 @@ ORDER BY Year ASC
 The graph shows a rapid increase in crime per day over the years from 2020 to 2022. The graph showed less crimes per day in 2023
 which may be due to the fact that all the crimes in 2023 has not been reported yet or are yet to occur. 
 
+Overall, there is an increasing trend in crime occurrence over the recent years.
+
+## 6. How does the rate of crimes differ between different descents ('Vict Descent')?
+Grouping by 'Vict Descent', and then calculating the total number and rate of crimes for each category gave us insight into which demographics were more likely to be victims of crimes.
+The sql query for this task is as below:
+```
+vict_descent,
+COUNT(*) as Crime_Count
+FROM la_crime
+group by vict_descent
+order by Crime_Count desc
+```
+<div align="center">
+ <img src="plots/6.png" alt="Alt Text">
+</div>
+The "Vict Descent" column in the LA Crime dataset represents the descent of the victim. Here are the codes that Los Angeles Police Department uses:
+
+| Code | Race/Ethnicity                  |
+|:----:|:-------------------------------:|
+| A    | Other Asian                     |
+| B    | Black                           |
+| C    | Chinese                         |
+| D    | Cambodian                       |
+| F    | Filipino                        |
+| G    | Guamanian                       |
+| H    | Hispanic/Latin/Mexican          |
+| I    | American Indian/Alaskan Native  |
+| J    | Japanese                        |
+| K    | Korean                          |
+| L    | Laotian                         |
+| O    | Other                           |
+| P    | Pacific Islander                |
+| S    | Samoan                          |
+| U    | Hawaiian                        |
+| V    | Vietnamese                      |
+| W    | White                           |
+| X    | Unknown                         |
+| Z    | Asian Indian                    |
+
+The data reveals that Hispanic/Latin/Mexican individuals are the most victimized group, followed by White, Black, and others. It's important to note that there is a category for unknown descent (X) and cases where descent information isn't available (NA). 
 
 
+## 7. What percentage of crimes involve the use of weapons ('Weapon Used Cd' or 'Weapon Desc')?
+By using subquery and grouping on outer query we were able to get the count of weapon used and their use percentage from the data. It is crucial to know what weapons are mostly used in crimes to regulate their uses.
+The sql query for this task is as below:
+```
+SELECT 
+ weapon_desc,
+ count(*) as weapon_used_count,
+ (count(*) / (SELECT count(*) from la_crime)::float)*100 As Weapon_Used_percentage
+from la_crime
+group by weapon_desc
+order by weapon_used_count desc
+```
+Since, there are information of about 80 weapons used, it makes the generated graph cluttered. Thus, we will plot using only the top 10 weapons.
+<div align="center">
+ <img src="plots/7.png" alt="Alt Text">
+</div>
 
+We know that about 65.27% of weapons data in the dataset were NA, they were replaced by "Unknown". Ignoring those, it can be noted that
+strong-arm (hands, fits, feet or bodily force) were used in most cases, denoting unarmed crimes. Other than that 3.57% of total cases had unknown weapon,
+while 2.55% were just verbal threat, meaning non-violent crimes. There was usage of 2.15% of hand gun, which might seems a lot, but can cause much more damage than other means.
+Other weapons were used less than 1%.
 
+## 8. What are the most common locations for crimes to occur (based on 'LOCATION')?
+By grouping according to area_name, we can identify the areas of places that experience the highest criminal activities.This analysis allows us to uncover patterns and trends in crime distribution, aiding law enforcement agencies, policymakers, and communities in prioritizing resources and implementing targeted interventions to improve safety and security.
+The sql query for this task is as below:
+```
+SELECT
+ area_name,
+ count(*) as crime_count
+ from la_crime
+group by area_name
+order by crime_count desc
+```
 
+<div align="center">
+ <img src="plots/8.png" alt="Alt Text">
+</div>
 
+This data generates insights that Central area of LA is the most criminally active place, followed closely by 77th Street, Pacific, Hollywood,etc.,
+with Foothill recording the least crimes of all the areas. This signifies the need to increase securities in the highly criminal areas that have been identified with this data.
 
-
-
-
-
+## 9. Are there certain crimes that are increasing or decreasing over time more than others?
+Identifying certain crimes that are increasing or decreasing over time can be crucial to implement rules and regulations to control those said crimes.
+This can be done using cte and lag() function to keep track of the changes occuring with respect to previous year to find which crime have most increase or decrease.
+The sql query for this task is as below:
+```
+WITH crime_over_time AS (
+  SELECT
+    EXTRACT(YEAR FROM date_occ) AS year,
+    crm_cd_desc,
+    COUNT(*) AS crime_count,
+    LAG(COUNT(*)) OVER (PARTITION BY crm_cd_desc ORDER BY EXTRACT(YEAR FROM date_occ)) AS previous_count
+  FROM
+    la_crime
+  GROUP BY
+    year, crm_cd_desc
+)
+SELECT
+  year,
+  crm_cd_desc,
+  crime_count,
+  previous_count,
+  crime_count - previous_count AS count_change
+FROM
+  crime_over_time
+```
+We can generate a linechart to see the increase or decrease trend over time. But since there are large number of crime types, we limit our graph to display only the top 5 most occuring crime
 
 
