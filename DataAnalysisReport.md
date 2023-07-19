@@ -302,6 +302,172 @@ SELECT
 FROM
   crime_over_time
 ```
-We can generate a linechart to see the increase or decrease trend over time. But since there are large number of crime types, we limit our graph to display only the top 5 most occuring crime
+We can generate a linechart to see the increase or decrease trend over time. But since there are large number of crime types, we limit our graph to display only the top 5 most occuring crime.
+<div align="center">
+ <img src="plots/9.png" alt="Alt Text">
+</div>
+
+From this graph, it can be seen that most crimes have increasing trends, with "Theft of Identity" showing sharp increase from 2021 to 2022. However,
+other most occurring crimes like 'Battery - Simple Vehicle',"Burglary from vehicle","Vandalism", "Vehicle stolen" having slight change over the years. The 2023 data can be ignored as its incomplete since the year hasn't ended.
+
+## 10 .  Are certain types of crime more prevalent in certain areas?
+Identifying crimes that are more prevalent in certain areas can be done using SQL using cte, window function row_number(), joins and grouping. This information can help in understanding if there are certain crimes that are common in most regions.
+The sql query for this tak is as below:
+```
+with total_crimes_by_area as (
+Select
+	area_name,
+	count(*) as total_crime_count
+	from la_crime
+	group by area_name
+),
+crime_counts_by_area as (
+	SELECT 
+	area_name,
+	crm_cd_desc,
+	count(*) as crime_count,
+	ROW_NUMBER() OVER (PARTITION BY area_name ORDER BY COUNT(*) desc) as rn
+	from la_crime
+	group by area_name, crm_cd_desc
+)
+
+select 
+	cc.area_name, 
+	cc.crm_cd_desc,
+	cc.crime_count,
+	cc.crime_count * 100.0 / tc.total_crime_count as crime_proportion
+from crime_counts_by_area as cc
+JOIN
+	total_crimes_by_area as tc ON cc.area_name = tc.area_name
+where rn <=5
+ORDER BY 
+    cc.area_name, 
+    cc.crime_count DESC;
+```
+![10](plots/10.png)
+The graph reveals that "vehicle - stolen" is the most frequently occurring crime in a majority of areas. This suggests that incidents of vehicle theft are a prevalent concern across different locations. Additionally, other common crimes that are prominent include "Burglary," indicating unauthorized entry into properties with intent to commit theft or other offenses, "battery - simple assault," which involves non-aggravated physical altercations, and "vandalism," encompassing acts of willful property damage. These findings highlight the need for targeted efforts in addressing vehicle theft, burglary prevention, tackling assault incidents, and promoting measures to deter vandalism in order to enhance public safety and reduce crime rates.
+
+## 11. Are certain crimes more likely to happen at certain times of the year?
+It is rather important to find which crimes occur at certain time of year such as which month they are most likely to occur in. This helps in preparing cautionary methods for that crime in that specific time of the year.
+This can be done in sql by grouping the data by "crm_cd_desc", extract() function to extract the month. Since, 2023 data is incomplete we exclude it. As there more large number of crime, we can concentrate on top 5 crimes, which is filtered in python using pandas.
+The sql query for this task is:
+```
+SELECT
+ crm_cd_desc,
+ EXTRACT (MONTH from date_occ) as month_of_occurence,
+ count(*) as crime_count
+FROM la_crime
+WHERE EXTRACT(YEAR from date_occ) < 2023
+group by crm_cd_desc, month_of_occurence
+order by crm_cd_desc, crime_count
+
+```
+<div align="center">
+ <img src="plots/11.png" alt="Alt Text">
+</div>
+
+It can be seen that "Vehicle-stolen" is maximum among all the crime throughout the year, with its max occurrence from the start of 2nd quarter to the end of year.
+Among other crimes, "Battery - Simple Assault" seems to be maximum around 7th month, "Vandalism" seems to be most from 5th month to 7th month. "Burglary from vehicle" seems to be max at the start of year and end of year.
+In addition to this, "Theft of identity" seems to start at minimum at the start of year, reaching highest at the end of year at 12th month. The security policies can be made based on their peak occurrence throughout the year.
+
+## 12. Which area has the most crimes?
+Determining the area with the highest number of crimes provides valuable insights into the concentration of criminal activities and helps prioritize resource allocation and crime prevention efforts. It can be done using simple sql query
+to group by area_name and order by crime_count in descending order, and limit output to 1. The sql query for this task is:
+```
+SELECT
+	area_name,
+	count(*) as crime_count
+FROM la_crime
+group by area_name
+order by crime_count desc
+limit 1
+```
+
+This query gave the following result:
+### Area with most Crime: Central with 47439 crimes
+
+## 13. Which area has the least crimes?
+Identifying the area with the least number of crimes is essential for understanding areas of relatively lower crime rates and potentially offering insights into effective crime prevention strategies.
+It can be done using simple sql query to group by area_name and order by crime_count in aescending order, and limit output to 1. The sql query for this task is:
+```
+SELECT
+	area_name,
+	count(*) as crime_count
+FROM la_crime
+group by area_name
+order by crime_count asc
+limit 1
+```
+
+This query gave the following result:
+### Area with the least Crime: Foothill with 23946 crimes
+
+## 14. What is the distribution of victim's age for unsolved crimes?
+The distribution of victim's age for unsolved crimes can be created using CASE for the creation of age bucket, subquery to
+include only unsolved crime, and finally grouping by age range. The sql query for this case is;
+```
+SELECT
+	CASE
+		WHEN age_bucket=1 THEN '0-10'
+		WHEN age_bucket=2 THEN '11-20'
+		WHEN age_bucket=3 THEN '21-30'
+	    WHEN age_bucket = 4 THEN '31-40'
+        WHEN age_bucket = 5 THEN '41-50'
+        WHEN age_bucket = 6 THEN '51-60'
+        WHEN age_bucket = 7 THEN '61-70'
+        ELSE '71+'
+	END as age_range,
+	count(*) as total_victims
+FROM
+	(select
+		width_bucket(vict_age ,0,100,7) as age_bucket
+	from la_crime
+	where
+		status='IC' and vict_age >0) sub
+group by age_range
+```
+<div align="center">
+ <img src="plots/14.png" alt="Alt Text">
+</div>
+The analysis of the distribution of victim's age in unsolved crimes reveals an interesting pattern. The data indicates a normal distribution, suggesting that the ages of victims follow a typical bell-shaped curve. Notably, the age group of 21-30 appears to be particularly vulnerable, with a higher likelihood of being victims of crimes. This finding highlights the importance of targeted prevention strategies and support systems for individuals within this age range, aimed at reducing victimization rates and enhancing their safety and security
+
+## 15. How does the crime rate compare between different sexes and descents?
+Comparing the crime rates between different sexes and descents provides valuable insights into the variations and disparities in victimization across diverse demographic groups. By analyzing the available data, we can examine whether there are notable differences in crime rates based on sex (male, female, non-binary) and descent (such as Hispanic/Latin/Mexican, White, Black, and others). This analysis allows for a deeper understanding of how different populations are affected by crime and provides a foundation for developing targeted interventions and policies to address the specific needs and challenges faced by these groups. Let's explore the data to gain a 
+better understanding of the comparative crime rates among various sexes and descents.
+
+The sql query for comparing crime_rate by different sex is:
+```
+SELECT 
+    vict_sex,
+    count(*) as total_crimes,
+    ROUND((count(*)::NUMERIC / (SELECT COUNT(*) FROM la_crime)::NUMERIC) * 100.0, 2) as crime_rate
+FROM la_crime
+GROUP BY vict_sex
+ORDER BY crime_rate desc
+```
+
+<div align="center">
+ <img src="plots/15_1.png" alt="Alt Text">
+</div>
+
+Males are the sex who end up becoming the most victims, followed by female with 41.50% and 36.99 % respectively. Binary gender had about 8.41% reports in which they were victimized.
+H and Unknown are the groups where gender is unknown.
+
+The sql query for comparing crime_rate by different descent is:
+```
+SELECT 
+    vict_descent,
+    count(*) as total_crimes,
+    ROUND((count(*)::NUMERIC / (SELECT COUNT(*) FROM la_crime)::NUMERIC) * 100.0, 2) as crime_rate
+FROM la_crime
+GROUP BY vict_descent
+ORDER BY crime_rate desc
+```
+<div align="center">
+ <img src="plots/15_2.png" alt="Alt Text">
+</div>
+
+The data reveals that Hispanic/Latin/Mexican individuals are the most victimized group, followed by White, Black, and others. It's important to note that there is a category for unknown descent (X) and cases where descent information isn't available (NA).
 
 
+These analyses, grounded in the exploration of our key questions, provided a comprehensive understanding of the dataset, allowing us to identify key patterns, trends, and relationships within the crime data.
