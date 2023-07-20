@@ -128,7 +128,7 @@ The visualization was generated using only top 10 crimes with most occurence, as
 
 The heatmap summarizes that most of the crimes usually occurs at the time period of afternoon or evening, while the crimes less likely occur during the morning and night in general.
 
-## 3. What is the average age ('Vict Age') of victims for each type of crime ('Crm Cd Desc')?
+### 3. What is the average age ('Vict Age') of victims for each type of crime ('Crm Cd Desc')?
 To understand the demographic of most affected by the type of crime, the average age of victims was calculated per crime type. This analysis was made more accurate by excluding rows where victim age was zero,
 which had been previously imputed during the data cleaning process. The sql query used grouping according crime to calculate the average victim age.
 The sql query is as below:
@@ -152,7 +152,7 @@ The barplot provides insight into the age distribution of crime victims, reveali
 
 The histogram presents a visual representation of the distribution of average ages among crime victims. It exhibits a normal distribution pattern, indicating that the majority of victims have an average age around 40. This suggests that 40-year-olds are particularly vulnerable to criminal activities, as they comprise the peak of the distribution. The histogram provides a clear depiction of the central tendency and dispersion of average ages among crime victims.
 
-## 4. Are men, women, or non-binary individuals ('Vict Sex') more likely to be victims of certain types of crimes ('Crm Cd Desc')?
+### 4. Are men, women, or non-binary individuals ('Vict Sex') more likely to be victims of certain types of crimes ('Crm Cd Desc')?
 Understanding the dynamics of crime victimization is essential for identifying patterns and addressing vulnerabilities within different populations. One aspect to consider is the relationship between gender identity ('Vict Sex') and the likelihood of being a victim of specific types of crimes ('Crm Cd Desc'). By examining available data, we can explore whether men, women, or non-binary individuals are more susceptible to certain categories of crimes. This analysis can contribute to developing targeted prevention strategies and support systems tailored to the unique needs of various gender identities.
 For this purpose, sql query was written which was grouped by "crm_cd_desc" and "vict_sex" to find out which genders are affected the most.
 The sql query for this task is:
@@ -174,7 +174,7 @@ victimized in crimes such as "Assault with deadly weapon/aggravated assault","ba
 It also gave insights that female ares more likely to be victims in domestic violence (intimate partner - simple assault), theft of identity and such.
 Non-Binary individuals (X) had the lowest proportion in victims, which may be due to the fact they are few in numbers.
 
-## 5. How does crime rate change over the years? Is there an overall increasing or decreasing trend?
+### 5. How does crime rate change over the years? Is there an overall increasing or decreasing trend?
 This analysis involved grouping by year and counting the number of crimes, which was achieved by using the EXTRACT() function to extract the year from the 'Date_Occ' column. This helped us understand the trend of crime rates over the years, indicating whether there has been an increase or decrease in overall crime incidents.
 This information is valuable for shaping crime prevention strategies and understanding societal factors influencing criminal activities. The sql
 query used for this operation is as below:
@@ -196,7 +196,7 @@ which may be due to the fact that all the crimes in 2023 has not been reported y
 
 Overall, there is an increasing trend in crime occurrence over the recent years.
 
-## 6. How does the rate of crimes differ between different descents ('Vict Descent')?
+### 6. How does the rate of crimes differ between different descents ('Vict Descent')?
 Grouping by 'Vict Descent', and then calculating the total number and rate of crimes for each category gave us insight into which demographics were more likely to be victims of crimes.
 The sql query for this task is as below:
 ```
@@ -236,7 +236,7 @@ The "Vict Descent" column in the LA Crime dataset represents the descent of the 
 The data reveals that Hispanic/Latin/Mexican individuals are the most victimized group, followed by White, Black, and others. It's important to note that there is a category for unknown descent (X) and cases where descent information isn't available (NA). 
 
 
-## 7. What percentage of crimes involve the use of weapons ('Weapon Used Cd' or 'Weapon Desc')?
+### 7. What percentage of crimes involve the use of weapons ('Weapon Used Cd' or 'Weapon Desc')?
 By using subquery and grouping on outer query we were able to get the count of weapon used and their use percentage from the data. It is crucial to know what weapons are mostly used in crimes to regulate their uses.
 The sql query for this task is as below:
 ```
@@ -258,7 +258,7 @@ strong-arm (hands, fits, feet or bodily force) were used in most cases, denoting
 while 2.55% were just verbal threat, meaning non-violent crimes. There was usage of 2.15% of hand gun, which might seems a lot, but can cause much more damage than other means.
 Other weapons were used less than 1%.
 
-## 8. What are the most common locations for crimes to occur (based on 'LOCATION')?
+### 8. What are the most common locations for crimes to occur (based on 'LOCATION')?
 By grouping according to area_name, we can identify the areas of places that experience the highest criminal activities.This analysis allows us to uncover patterns and trends in crime distribution, aiding law enforcement agencies, policymakers, and communities in prioritizing resources and implementing targeted interventions to improve safety and security.
 The sql query for this task is as below:
 ```
@@ -277,7 +277,7 @@ order by crime_count desc
 This data generates insights that Central area of LA is the most criminally active place, followed closely by 77th Street, Pacific, Hollywood,etc.,
 with Foothill recording the least crimes of all the areas. This signifies the need to increase securities in the highly criminal areas that have been identified with this data.
 
-## 9. Are there certain crimes that are increasing or decreasing over time more than others?
+### 9. Are there certain crimes that are increasing or decreasing over time more than others?
 Identifying certain crimes that are increasing or decreasing over time can be crucial to implement rules and regulations to control those said crimes.
 This can be done using cte and lag() function to keep track of the changes occuring with respect to previous year to find which crime have most increase or decrease.
 The sql query for this task is as below:
@@ -310,7 +310,7 @@ We can generate a linechart to see the increase or decrease trend over time. But
 From this graph, it can be seen that most crimes have increasing trends, with "Theft of Identity" showing sharp increase from 2021 to 2022. However,
 other most occurring crimes like 'Battery - Simple Vehicle',"Burglary from vehicle","Vandalism", "Vehicle stolen" having slight change over the years. The 2023 data can be ignored as its incomplete since the year hasn't ended.
 
-## 10 .  Are certain types of crime more prevalent in certain areas?
+### 10 .  Are certain types of crime more prevalent in certain areas?
 Identifying crimes that are more prevalent in certain areas can be done using SQL using cte, window function row_number(), joins and grouping. This information can help in understanding if there are certain crimes that are common in most regions.
 The sql query for this tak is as below:
 ```
@@ -347,7 +347,7 @@ ORDER BY
 ![10](plots/10.png)
 The graph reveals that "vehicle - stolen" is the most frequently occurring crime in a majority of areas. This suggests that incidents of vehicle theft are a prevalent concern across different locations. Additionally, other common crimes that are prominent include "Burglary," indicating unauthorized entry into properties with intent to commit theft or other offenses, "battery - simple assault," which involves non-aggravated physical altercations, and "vandalism," encompassing acts of willful property damage. These findings highlight the need for targeted efforts in addressing vehicle theft, burglary prevention, tackling assault incidents, and promoting measures to deter vandalism in order to enhance public safety and reduce crime rates.
 
-## 11. Are certain crimes more likely to happen at certain times of the year?
+### 11. Are certain crimes more likely to happen at certain times of the year?
 It is rather important to find which crimes occur at certain time of year such as which month they are most likely to occur in. This helps in preparing cautionary methods for that crime in that specific time of the year.
 This can be done in sql by grouping the data by "crm_cd_desc", extract() function to extract the month. Since, 2023 data is incomplete we exclude it. As there more large number of crime, we can concentrate on top 5 crimes, which is filtered in python using pandas.
 The sql query for this task is:
@@ -370,7 +370,7 @@ It can be seen that "Vehicle-stolen" is maximum among all the crime throughout t
 Among other crimes, "Battery - Simple Assault" seems to be maximum around 7th month, "Vandalism" seems to be most from 5th month to 7th month. "Burglary from vehicle" seems to be max at the start of year and end of year.
 In addition to this, "Theft of identity" seems to start at minimum at the start of year, reaching highest at the end of year at 12th month. The security policies can be made based on their peak occurrence throughout the year.
 
-## 12. Which area has the most crimes?
+### 12. Which area has the most crimes?
 Determining the area with the highest number of crimes provides valuable insights into the concentration of criminal activities and helps prioritize resource allocation and crime prevention efforts. It can be done using simple sql query
 to group by area_name and order by crime_count in descending order, and limit output to 1. The sql query for this task is:
 ```
@@ -386,7 +386,7 @@ limit 1
 This query gave the following result:
 ### Area with most Crime: Central with 47439 crimes
 
-## 13. Which area has the least crimes?
+### 13. Which area has the least crimes?
 Identifying the area with the least number of crimes is essential for understanding areas of relatively lower crime rates and potentially offering insights into effective crime prevention strategies.
 It can be done using simple sql query to group by area_name and order by crime_count in aescending order, and limit output to 1. The sql query for this task is:
 ```
@@ -402,7 +402,7 @@ limit 1
 This query gave the following result:
 ### Area with the least Crime: Foothill with 23946 crimes
 
-## 14. What is the distribution of victim's age for unsolved crimes?
+### 14. What is the distribution of victim's age for unsolved crimes?
 The distribution of victim's age for unsolved crimes can be created using CASE for the creation of age bucket, subquery to
 include only unsolved crime, and finally grouping by age range. The sql query for this case is;
 ```
@@ -431,7 +431,7 @@ group by age_range
 </div>
 The analysis of the distribution of victim's age in unsolved crimes reveals an interesting pattern. The data indicates a normal distribution, suggesting that the ages of victims follow a typical bell-shaped curve. Notably, the age group of 21-30 appears to be particularly vulnerable, with a higher likelihood of being victims of crimes. This finding highlights the importance of targeted prevention strategies and support systems for individuals within this age range, aimed at reducing victimization rates and enhancing their safety and security
 
-## 15. How does the crime rate compare between different sexes and descents?
+### 15. How does the crime rate compare between different sexes and descents?
 Comparing the crime rates between different sexes and descents provides valuable insights into the variations and disparities in victimization across diverse demographic groups. By analyzing the available data, we can examine whether there are notable differences in crime rates based on sex (male, female, non-binary) and descent (such as Hispanic/Latin/Mexican, White, Black, and others). This analysis allows for a deeper understanding of how different populations are affected by crime and provides a foundation for developing targeted interventions and policies to address the specific needs and challenges faced by these groups. Let's explore the data to gain a 
 better understanding of the comparative crime rates among various sexes and descents.
 
@@ -471,3 +471,78 @@ The data reveals that Hispanic/Latin/Mexican individuals are the most victimized
 
 
 These analyses, grounded in the exploration of our key questions, provided a comprehensive understanding of the dataset, allowing us to identify key patterns, trends, and relationships within the crime data.
+
+## Results
+Our analysis of the LA Crime dataset provides important insights into the nature and trends of criminal activities in Los Angeles. Here are some key findings:
+
+**1. Most Common Crime by Area:** Our data reveals that vehicle theft is the most common crime in most areas. However, there are exceptions. In Central, 'Burglary from vehicle' is more prevalent, while 'Battery - Simple Assault' is more common in Hollywood and 'Burglary' is more frequent in Topanga, West LA, and Wilshire.
+
+**2. Crime Time:**  An interesting pattern emerges when examining the relationship between the time of occurrence and the type of crime. We found that certain crimes are more likely to occur at specific times of the day. A heat map was generated to visualize this pattern using data from the top 10 most common crimes to avoid clutter.
+
+**3. Average Age of Victims:** The victims' ages are largely concentrated above 30 years, suggesting this age group is more susceptible to becoming victims of crimes. An examination of the age distribution showed a normal distribution with the peak at around 40, indicating that individuals in this age group are particularly vulnerable.
+
+**4. Victims by Sex and Crime Type:**  Men are more likely to be victims of certain types of crimes, including 'Assault with deadly weapon/aggravated assault', 'battery - simple assault', 'burglary', and 'burglary from vehicle'. Women, on the other hand, are more likely to be victims of domestic violence and identity theft. Non-binary individuals (X) had the lowest proportion of victims, possibly due to their smaller population size.
+
+**5. Trends Over Time:** There is an overall increasing trend in crime occurrences from 2020 to 2022. Data from 2023 appears to show fewer crimes per day, likely due to incomplete data collection for the year.
+
+**6. Victim Descent:**  Hispanic/Latin/Mexican individuals are the most frequently victimized group, followed by White, Black, and others. Categories for unknown descent (X) and cases where descent information isn't available (NA) were also present in significant amounts.
+
+**7. Weapon Use:** The data reveals that strong-arm methods (hands, fists, feet, or bodily force) were most commonly used in crimes, indicating a high frequency of unarmed crimes. Other notable means include verbal threat and the use of handguns.
+
+**8. Crime Locations:** Central LA is the most criminally active area, followed by 77th Street, Pacific, and Hollywood. Foothill had the least number of crimes.
+
+**9. Crime Trends:** Most crimes have an increasing trend over time, with identity theft showing a sharp increase from 2021 to 2022. Other common crimes like battery, burglary, and vehicle theft show slight changes over the years.
+
+**10. Area-Specific Crime:** 'Vehicle theft' is the most common crime in most areas, underscoring the need for enhanced vehicle security measures across these locations. Burglary, simple assault, and vandalism were other common crimes.
+
+**11. Seasonality of Crimes:** Certain crimes like 'Vehicle theft' and 'Theft of identity' appear to be more common during specific times of the year. This finding could help guide law enforcement efforts to deter these crimes.
+
+**12. Areas with Highest and Lowest Crimes:** Central has the highest number of crimes (47,439), while Foothill has the least (23,946).
+
+**13. Victim Age in Unsolved Crimes:** The distribution of victim's age in unsolved crimes reveals that individuals aged 21-30 are particularly vulnerable, indicating a need for targeted prevention strategies for this age group.
+
+**14. Crime Rate by Sex and Descent:** Men and individuals of Hispanic/Latin/Mexican descent are the most frequently victimized groups, highlighting the need for tailored interventions to address these disparities.
+
+These findings have several potential applications for policy making, community interventions, and law enforcement efforts aimed at preventing crime and enhancing public safety in Los Angeles.
+
+## Interpretation
+The aim of this study was to investigate the different dimensions of crime data from the city of Los Angeles, in order to shed light on various aspects such as the type of crimes, the temporal patterns, demographic aspects of the victims, and more. Here, we interpret our findings in the context of their implications and potential courses of action that can be undertaken.
+
+**1. Prevalence of Crime Types in Different Areas:** The data shows that "Vehicle-Stolen" is the most common crime across most of the areas, with some notable exceptions like 'Burglary from vehicle' in "Central" and 'Battery - Simple Assault' in "Hollywood". This suggests that preventive measures against vehicle theft should be a top priority in many neighborhoods, while burglary prevention should be emphasized in Central area, and initiatives to reduce assaults should be focused on in Hollywood.
+
+**2. Time of Occurrence vs. Type of Crime:** There seems to be a distinct pattern of certain crimes being more prevalent at certain times of the day. This suggests that targeted enforcement and patrol efforts during these high-risk times could potentially lead to a reduction in these specific crime incidents.
+
+**3. Average Age of Victims:** The age of crime victims peaks around the age of 40, indicating that this age group might be particularly vulnerable to crime incidents. This could inform local law enforcement and community leaders to devise strategies and programs aimed specifically at this age group to prevent crimes and offer support.
+
+**4. Victim Gender and Type of Crime:** Males appear to be more likely to be victims of certain types of crimes, followed by females. Non-binary individuals have the lowest proportion of victimization, which could be attributed to their lower representation in the population. This indicates a need for gender-focused approaches in crime prevention and support services.
+
+**5. Trends in Crime Rates Over the Years:** The data indicates a general upward trend in the crime rate from 2020 to 2022. This raises serious concerns and indicates an urgent need for effective crime prevention strategies and measures to reverse this trend.
+
+**6. Rate of Crimes by Descent:** The data reveals that Hispanic/Latin/Mexican individuals are the most victimized group. This may point to socio-economic or community-specific factors that require further investigation, and should inform the development of targeted support and prevention programs for these communities.
+
+**7. Use of Weapons in Crimes:** The prevalent use of strong-arm tactics in crimes indicates a high rate of violent crime that needs to be addressed.
+
+**8. Location Prevalence:** Central LA is the most crime-ridden area. Strategies should be devised to ensure increased security in this and other high-crime areas.
+
+**9. Temporal Trends of Certain Crimes:** Certain crimes, like "Theft of Identity", show an alarming increase in recent times, indicating a need to enhance efforts to combat such crimes.
+
+**10. Temporal Patterns of Crime Occurrence:** Some crimes peak at certain times of the year, which can guide the scheduling of increased surveillance and security measures during those periods.
+
+**11. Most and Least Crime-Prone Areas:** The high crime rate in Central LA and the low rate in Foothill may indicate socio-economic disparities, enforcement differences, or other local factors that need further study.
+
+**12. Unsolved Crimes and Victim Age:** The distribution of victims' age in unsolved crimes reveals a vulnerability in the 21-30 age group, pointing to a need for focused investigative resources on crimes involving this age group.
+
+## Conclusion
+Our comprehensive exploratory data analysis of crime data in Los Angeles has revealed several important patterns and insights that can contribute to effective crime prevention strategies, enforcement policies, and community support initiatives.
+
+We found that certain crimes, such as vehicle theft, are more prevalent across the city, with some neighborhoods showing unique patterns such as a higher incidence of burglary or assault. The relationship between the time of crime and type of crime also indicated potential high-risk periods that could be targeted for increased law enforcement.
+
+Our analysis also revealed that individuals around the age of 40 are disproportionately victims of crimes, and certain crimes have specific gender patterns. This indicates the need for tailored preventative strategies and resources for different demographic groups.
+
+The general trend of increasing crime rates over recent years is a cause for concern, suggesting an urgent need for policies and measures to counteract this trend. Furthermore, our analysis highlighted the stark disparities in victimization rates among different racial and ethnic groups, calling for community-specific interventions.
+
+The prevalent use of strong-arm tactics in crimes and the high rate of crimes in certain areas like Central LA also points towards the need for reinforced security and prevention measures in these areas.
+
+Interestingly, we also discovered that certain crimes peak at specific times of the year, offering an opportunity for temporal-focused enforcement and prevention efforts. Finally, the analysis of unsolved crimes and the age distribution of their victims revealed a vulnerability of the 21-30 age group, underscoring the need for focused investigative resources on crimes involving this age group.
+
+In conclusion, while this analysis has revealed some compelling patterns and trends, it is important to remember that these findings are based on available data and may not capture the full complexity of crime patterns in Los Angeles. Further research is necessary to explore these patterns more deeply and to understand the underlying causes driving these trends. However, this analysis has provided a starting point for understanding the landscape of crime in Los Angeles, and for developing data-driven strategies to improve public safety and support for the most vulnerable communities.

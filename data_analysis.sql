@@ -195,6 +195,7 @@ SELECT
  EXTRACT (MONTH from date_occ) as month_of_occurence,
  count(*) as crime_count
 FROM la_crime
+WHERE EXTRACT(YEAR from date_occ) < 2023
 group by crm_cd_desc, month_of_occurence
 order by crm_cd_desc, crime_count
 
