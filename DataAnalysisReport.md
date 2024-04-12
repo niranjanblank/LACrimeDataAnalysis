@@ -24,7 +24,6 @@ phase was R, a language specifically designed for statistical analysis and data 
 efficient tools for data cleaning.
 
 The data set consist of the following columns related to the crime reported.
-Sure, based on your provided column names and common conventions in crime datasets, here's a brief explanation of each:* DR_NO: This is likely a unique identifier for each crime report.
 
 | Column Name | Description |
 | ----------- | ----------- |
