@@ -1,4 +1,4 @@
-Sure, based on your provided column names and common conventions in crime datasets, here's a brief explanation of each:
+Here's a brief explanation of each of the columns:
 
 1. DR_NO: This is likely a unique identifier for each crime report.
 2. Date_Rptd: The date when the crime was reported.
